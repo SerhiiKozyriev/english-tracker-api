@@ -1,5 +1,5 @@
 const Datastore = require('nedb-promises');
-const db = Datastore.create({ filename: 'database.db', autoload: true });
+const db = Datastore.create({ filename: 'sessions.db', autoload: true });
 
 exports.getAllSessions = async (search) => {
   let filter = {};

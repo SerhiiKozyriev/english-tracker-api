@@ -3,8 +3,9 @@ const controller = require('../controllers/vocabulary.controller');
 
 const router = Router();
 
-router.get('/', controller.getAll);
-router.post('/', controller.create);
-router.patch('/:id/status', controller.toggleStatus);
+router.get('/', controller.getWords);
+router.post('/', controller.createWord);
+router.patch('/:id', controller.updateWord);
+router.delete('/:id', controller.deleteWord);
 
 module.exports = router;

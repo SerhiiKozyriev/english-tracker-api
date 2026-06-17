@@ -1,35 +1,45 @@
 const vocabularyService = require('../services/vocabulary.service');
 
-const getAll = async (req, res, next) => {
-  try {
-    const { status, search } = req.query;
-    const words = await vocabularyService.getWords(status, search);
-    res.json(words);
-  } catch (error) {
-    next(error);
-  }
+const getWords = async (req, res, next) => {
+    try {
+        const {status, search} = req.query;
+        const words = await vocabularyService.getWords(status, search);
+        res.json(words);
+    } catch (error) {
+        next(error);
+    }
 };
 
-const create = async (req, res, next) => {
-  try {
+const createWord = async (req, res, next) => {
+    try {
 
-    const newWord = await vocabularyService.addWord(req.body);
-    res.status(201).json(newWord);
-  } catch (error) {
-    next(error);
-  }
+        const newWord = await vocabularyService.addWord(req.body);
+        res.status(201).json(newWord);
+    } catch (error) {
+        next(error);
+    }
 };
 
-const toggleStatus = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    await vocabularyService.updateStatus(id, status);
-    res.json({ success: true, message: 'Status updated' });
-  } catch (error) {
-    next(error);
-  }
+const updateWord = async (req, res, next) => {
+    try {
+        const {id} = req.params;
+        await vocabularyService.updateWord(id, req.body);
+        res.json({success: true, message: 'Status updated'});
+    } catch (error) {
+        next(error);
+    }
 };
 
-module.exports = { getAll, create, toggleStatus };
+deleteWord = async (req, res, next) => {
+    try {
+        const {id} = req.params;
+        await vocabularyService.deleteWord(id);
+        res.json({message: 'Word deleted successfully', id});
+    } catch (error) {
+        if (error.message === 'Word not found') {
+            return res.status(404).json({error: error.message});
+        }
+        next(error);
+    }
+};
+module.exports = {getWords, createWord, updateWord, deleteWord};
