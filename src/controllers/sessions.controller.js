@@ -1,9 +1,9 @@
 const sessionService = require('../services/sessions.service');
 
-exports.getSessions = async (req, res, next) => {
+exports.getAll = async (req, res, next) => {
   try {
     const { search } = req.query;
-    const sessions = await sessionService.getAllSessions(search);
+    const sessions = await sessionService.getAll(search);
     res.json(sessions);
   } catch (error) {
     if (error.statusCode) {
@@ -13,9 +13,9 @@ exports.getSessions = async (req, res, next) => {
   }
 };
 
-exports.createSession = async (req, res, next) => {
+exports.create = async (req, res, next) => {
   try {
-    const savedSession = await sessionService.createNewSession(req.body);
+    const savedSession = await sessionService.create(req.body);
     res.status(201).json(savedSession);
   } catch (error) {
     if (error.statusCode) {
@@ -25,10 +25,10 @@ exports.createSession = async (req, res, next) => {
   }
 };
 
-exports.deleteSession = async (req, res, next) => {
+exports.delete = async (req, res, next) => {
   try {
     const { id } = req.params;
-    await sessionService.removeSession(id);
+    await sessionService.delete(id);
     res.json({ message: 'Session deleted successfully', id });
   } catch (error) {
     if (error.statusCode) {

@@ -1,9 +1,9 @@
 const vocabularyService = require('../services/vocabulary.service');
 
-const getWords = async (req, res, next) => {
+const getAll = async (req, res, next) => {
     try {
         const {search, status} = req.query;
-        const words = await vocabularyService.getWords(search, status);
+        const words = await vocabularyService.getAll(search, status);
         res.json(words);
     } catch (error) {
         if (error.statusCode) {
@@ -13,18 +13,18 @@ const getWords = async (req, res, next) => {
     }
 };
 
-const getWordsStats = async (req, res, next) => {
+const getStats = async (req, res, next) => {
     try {
-        const stats = await vocabularyService.getWordsStats();
+        const stats = await vocabularyService.getStats();
         res.json(stats);
     } catch (error) {
         next(error);
     }
 };
 
-const createWord = async (req, res, next) => {
+const create = async (req, res, next) => {
     try {
-        const newWord = await vocabularyService.addWord(req.body);
+        const newWord = await vocabularyService.create(req.body);
         res.status(201).json(newWord);
     } catch (error) {
         if (error.statusCode) {
@@ -34,10 +34,10 @@ const createWord = async (req, res, next) => {
     }
 };
 
-const updateWord = async (req, res, next) => {
+const update = async (req, res, next) => {
     try {
         const {id} = req.params;
-        await vocabularyService.updateWord(id, req.body);
+        await vocabularyService.update(id, req.body);
         res.json({success: true, message: 'Status updated'});
     } catch (error) {
         if (error.statusCode) {
@@ -47,10 +47,10 @@ const updateWord = async (req, res, next) => {
     }
 };
 
-const deleteWord = async (req, res, next) => {
+const remove = async (req, res, next) => {
     try {
         const {id} = req.params;
-        await vocabularyService.deleteWord(id);
+        await vocabularyService.delete(id);
         res.json({message: 'Word deleted successfully', id});
     } catch (error) {
         if (error.statusCode) {
@@ -59,4 +59,4 @@ const deleteWord = async (req, res, next) => {
         next(error);
     }
 };
-module.exports = {getWords, createWord, updateWord, deleteWord, getWordsStats};
+module.exports = {getAll, create, update, delete: remove, getStats};

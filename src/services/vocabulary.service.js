@@ -11,7 +11,7 @@ const createClientError = (message, statusCode = 400) => {
     return error;
 };
 
-const getWords = async (search, status) => {
+const getAll = async (search, status) => {
     if (search && typeof search !== 'string') {
         throw createClientError('Search must be a string', 400);
     }
@@ -38,7 +38,7 @@ const getWords = async (search, status) => {
     }
 };
 
-const addWord = async (data) => {
+const create = async (data) => {
     if (!data) {
         throw createClientError('Word data is required', 400);
     }
@@ -65,7 +65,7 @@ const addWord = async (data) => {
     }
 };
 
-const updateWord = async (id, body) => {
+const update = async (id, body) => {
     if (!id || typeof id !== 'string') {
         throw createClientError('Word ID must be a non-empty string', 400);
     }
@@ -86,7 +86,7 @@ const updateWord = async (id, body) => {
     return numUpdated;
 };
 
-const deleteWord = async (id) => {
+const remove = async (id) => {
     if (!id || typeof id !== 'string') {
         throw createClientError('Word ID must be a non-empty string', 400);
     }
@@ -105,10 +105,10 @@ const deleteWord = async (id) => {
     return true;
 }
 
-const getWordsStats = async () => {
+const getStats = async () => {
     const learned = await db.count({ status: 'learned' });
     const learning = await db.count({ status: 'learning' });
     return { learned, learning, total: learned + learning };
 };
 
-module.exports = {getWords, addWord, updateWord, deleteWord, getWordsStats};
+module.exports = {getAll, create, update, delete: remove, getStats};

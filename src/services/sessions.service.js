@@ -11,7 +11,7 @@ const createClientError = (message, statusCode = 400) => {
   return error;
 };
 
-exports.getAllSessions = async (search) => {
+exports.getAll = async (search) => {
   let filter = {};
 
   if (search) {
@@ -32,7 +32,7 @@ exports.getAllSessions = async (search) => {
   }
 };
 
-exports.createNewSession = async (sessionData) => {
+exports.create = async (sessionData) => {
   if (!sessionData) {
     throw createClientError('Session data is required', 400);
   }
@@ -88,7 +88,7 @@ exports.createNewSession = async (sessionData) => {
   }
 };
 
-exports.removeSession = async (id) => {
+exports.delete = async (id) => {
   if (!id || typeof id !== 'string') {
     throw createClientError('Session ID must be a non-empty string', 400);
   }
