@@ -1,39 +1,26 @@
 const sessionService = require('../services/sessions.service');
 
-exports.getAll = async (req, res, next) => {
-  try {
-    const { search } = req.query;
-    const sessions = await sessionService.getAll(search);
-    res.json(sessions);
-  } catch (error) {
-    if (error.statusCode) {
-      return res.status(error.statusCode).json({ error: error.message });
-    }
-    next(error);
-  }
+const getAll = async (req, res) => {
+  const { search } = req.query;
+  const sessions = await sessionService.getAll(search);
+  res.status(200).json(sessions);
 };
 
-exports.create = async (req, res, next) => {
-  try {
-    const savedSession = await sessionService.create(req.body);
-    res.status(201).json(savedSession);
-  } catch (error) {
-    if (error.statusCode) {
-      return res.status(error.statusCode).json({ error: error.message });
-    }
-    next(error);
-  }
+const create = async (req, res) => {
+  const savedSession = await sessionService.create(req.body);
+  res.status(201).json(savedSession);
 };
 
-exports.delete = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    await sessionService.delete(id);
-    res.json({ message: 'Session deleted successfully', id });
-  } catch (error) {
-    if (error.statusCode) {
-      return res.status(error.statusCode).json({ error: error.message });
-    }
-    next(error);
-  }
+const update = async (req, res) => {
+  const { id } = req.params;
+  const updatedSession = await sessionService.update(id, req.body);
+  res.status(200).json(updatedSession);
 };
+
+const remove = async (req, res) => {
+  const { id } = req.params;
+  await sessionService.delete(id);
+  res.status(200).json({ message: 'Session deleted successfully', id });
+};
+
+module.exports = { getAll, create, update, delete: remove };

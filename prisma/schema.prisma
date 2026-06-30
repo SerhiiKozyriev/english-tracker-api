@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  date      String   @unique
+  duration  Int
+  notes     String   @default("")
+  createdAt DateTime @default(now())
+  topics    Topic[]
+}
+
+model Topic {
+  id        String   @id @default(uuid())
+  category  String
+  desc      String
+  sessionId String
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model Word {
+  id          String   @id @default(uuid())
+  word        String
+  translation String
+  example     String?
+  status      String   @default("learning")
+  createdAt   DateTime @default(now())
+}

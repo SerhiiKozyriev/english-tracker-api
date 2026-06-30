@@ -45,3 +45,5 @@ Thumbs.db
 
 # Database files
 *.db
+*.env
+/src/generated/prisma
