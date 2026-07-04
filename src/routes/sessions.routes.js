@@ -11,7 +11,9 @@ const {
 
 router.get('/', validate(getSessionsSchema), sessionController.getAll);
 router.post('/', validate(createSessionSchema), sessionController.create);
+router.get('/stats', sessionController.getStats);
 router.patch('/:id', validate(updateSessionSchema), sessionController.update);
 router.delete('/:id', validate(deleteSessionSchema), sessionController.delete);
 
 module.exports = router;
+

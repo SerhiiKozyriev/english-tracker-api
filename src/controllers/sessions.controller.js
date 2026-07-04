@@ -23,4 +23,10 @@ const remove = async (req, res) => {
   res.status(200).json({ message: 'Session deleted successfully', id });
 };
 
-module.exports = { getAll, create, update, delete: remove };
+const getStats = async (req, res) => {
+  const stats = await sessionService.getStats();
+  res.status(200).json(stats);
+};
+
+module.exports = { getAll, create, update, delete: remove, getStats };
+

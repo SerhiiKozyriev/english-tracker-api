@@ -101,4 +101,54 @@ const remove = async (id) => {
   }
 };
 
-module.exports = { getAll, create, update, delete: remove };
+const getStats = async () => {
+  const sessions = await prisma.session.findMany({
+    include: {
+      topics: {
+        include: {
+          category: true
+        }
+      }
+    }
+  });
+
+  const categories = await prisma.category.findMany();
+
+  const sessionsCount = sessions.length;
+  const totalMinutes = sessions.reduce((acc, s) => acc + (s.duration || 0), 0);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  const topicsCount = sessions.reduce((acc, s) => {
+    return acc + s.topics.reduce((sum, t) => {
+      const parts = (t.desc || '').split(',').map(p => p.trim()).filter(Boolean);
+      return sum + parts.length;
+    }, 0);
+  }, 0);
+
+  const statsByCategory = {};
+  for (const cat of categories) {
+    statsByCategory[cat.slug] = 0;
+  }
+
+  for (const session of sessions) {
+    for (const topic of session.topics) {
+      if (topic.category && topic.category.slug) {
+        const slug = topic.category.slug;
+        const parts = (topic.desc || '').split(',').map(p => p.trim());
+        statsByCategory[slug] = (statsByCategory[slug] || 0) + parts.length;
+      }
+    }
+  }
+
+  return {
+    sessionsCount,
+    hours,
+    minutes,
+    topicsCount,
+    statsByCategory
+  };
+};
+
+module.exports = { getAll, create, update, delete: remove, getStats };
+
