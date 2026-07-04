@@ -3,9 +3,13 @@ const { z } = require('zod');
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 const topicSchema = z.object({
-  categoryId: z.string({
-    required_error: 'Topic category ID is required',
-  }).trim().min(1, 'Topic category ID cannot be empty'),
+  category: z.object({
+    id: z.string({
+      required_error: 'Topic category ID is required',
+    }).trim().min(1, 'Topic category ID cannot be empty'),
+    slug: z.string().optional(),
+    display_name: z.string().optional(),
+  }),
   desc: z.string({
     required_error: 'Topic description is required',
   }).trim().min(1, 'Topic description cannot be empty'),

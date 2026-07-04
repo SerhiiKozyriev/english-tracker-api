@@ -30,7 +30,7 @@ const create = async (sessionData) => {
         ...fields,
         topics: {
           create: topics.map(t => ({
-            categoryId: t.categoryId,
+            categoryId: t.category.id,
             desc: t.desc
           }))
         }
@@ -58,7 +58,7 @@ const update = async (id, sessionData) => {
     updateFields.topics = {
       deleteMany: {},
       create: topics.map(t => ({
-        categoryId: t.categoryId,
+        categoryId: t.category.id,
         desc: t.desc
       }))
     };
