@@ -3,9 +3,9 @@ const { z } = require('zod');
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 const topicSchema = z.object({
-  category: z.string({
-    required_error: 'Topic category is required',
-  }).trim().min(1, 'Topic category cannot be empty'),
+  categoryId: z.string({
+    required_error: 'Topic category ID is required',
+  }).trim().min(1, 'Topic category ID cannot be empty'),
   desc: z.string({
     required_error: 'Topic description is required',
   }).trim().min(1, 'Topic description cannot be empty'),
@@ -20,7 +20,7 @@ const createSessionSchema = z.object({
       required_error: 'Duration is required',
     }).positive('Duration must be a positive number'),
     notes: z.string().trim().optional().default(''),
-    topics: z.array(topicSchema),
+    topics: z.array(topicSchema).nonempty('Session must have at least one topic'),
   }),
 });
 

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -7,27 +8,35 @@ datasource db {
 }
 
 model Session {
-  id        String   @id @default(uuid())
-  date      String   @unique
-  duration  Int
-  notes     String   @default("")
+  id String @id @default(uuid())
+  date String @unique
+  duration Int
+  notes String @default("")
   createdAt DateTime @default(now())
-  topics    Topic[]
+  topics Topic[]
 }
 
 model Topic {
-  id        String   @id @default(uuid())
-  category  String
-  desc      String
-  sessionId String
-  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  desc       String
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
 }
 
 model Word {
   id          String   @id @default(uuid())
   word        String
   translation String
-  example     String?
+  example     String   @default("")
   status      String   @default("learning")
   createdAt   DateTime @default(now())
+}
+
+model Category {
+  id           String  @id @default(uuid())
+  slug         String
+  display_name String
+  topics       Topic[]
 }

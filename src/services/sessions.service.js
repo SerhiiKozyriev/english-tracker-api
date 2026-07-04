@@ -2,33 +2,46 @@ const prisma = require('../prisma');
 const { NotFoundError, ConflictError } = require('../utils/errors');
 
 const getAll = async (search) => {
-  return await prisma.session.findMany({
+  return prisma.session.findMany({
     where: search ? {
       OR: [
-        { notes: { contains: search, mode: 'insensitive' } },
-        { topics: { some: { desc: { contains: search, mode: 'insensitive' } } } }
+        {notes: {contains: search, mode: 'insensitive'}},
+        {topics: {some: {desc: {contains: search, mode: 'insensitive'}}}},
+        {topics: {some: {category: {display_name: {contains: search, mode: 'insensitive'}}}}},
+        {topics: {some: {category: {slug: {contains: search, mode: 'insensitive'}}}}}
       ]
     } : undefined,
-    include: { topics: true },
-    orderBy: { date: 'desc' }
+    include: {
+      topics: {
+        include: {
+          category: true
+        }
+      }
+    },
+    orderBy: {date: 'desc'}
   });
 };
 
 const create = async (sessionData) => {
   const { topics, ...fields } = sessionData;
-
   try {
     return await prisma.session.create({
       data: {
         ...fields,
         topics: {
           create: topics.map(t => ({
-            category: t.category,
+            categoryId: t.categoryId,
             desc: t.desc
           }))
         }
       },
-      include: { topics: true }
+      include: {
+        topics: {
+          include: {
+            category: true
+          }
+        }
+      }
     });
   } catch (error) {
     if (error.code === 'P2002') {
@@ -45,7 +58,7 @@ const update = async (id, sessionData) => {
     updateFields.topics = {
       deleteMany: {},
       create: topics.map(t => ({
-        category: t.category,
+        categoryId: t.categoryId,
         desc: t.desc
       }))
     };
@@ -55,7 +68,13 @@ const update = async (id, sessionData) => {
     return await prisma.session.update({
       where: { id },
       data: updateFields,
-      include: { topics: true }
+      include: {
+        topics: {
+          include: {
+            category: true
+          }
+        }
+      }
     });
   } catch (error) {
     if (error.code === 'P2025') {
