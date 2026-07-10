@@ -28,7 +28,7 @@ const create = async (data) => {
     word: word.trim(),
     translation: translation.trim(),
     status: status || 'learning',
-    example: example || null,
+    example: example || '',
   };
 
   return await prisma.word.create({ data: newCard });

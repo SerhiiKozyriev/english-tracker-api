@@ -11,7 +11,7 @@ const createWordSchema = z.object({
     status: z.enum(['learning', 'learned'], {
       errorMap: () => ({ message: 'Invalid status' })
     }).optional().default('learning'),
-    example: z.string().trim().nullable().optional(),
+    example: z.string().trim().optional(),
   }),
 });
 
@@ -25,7 +25,7 @@ const updateWordSchema = z.object({
     status: z.enum(['learning', 'learned'], {
       errorMap: () => ({ message: 'Invalid status' })
     }).optional(),
-    example: z.string().trim().nullable().optional(),
+    example: z.string().trim().optional(),
   }).refine((data) => Object.keys(data).length > 0, {
     message: 'Update payload must be a non-empty object',
   }),
