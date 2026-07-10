@@ -10,9 +10,11 @@ const topicSchema = z.object({
     slug: z.string().optional(),
     display_name: z.string().optional(),
   }),
-  desc: z.string({
-    required_error: 'Topic description is required',
-  }).trim().min(1, 'Topic description cannot be empty'),
+  desc: z.array(
+    z.string({
+      required_error: 'Topic description is required',
+    }).trim().min(1, 'Topic description cannot be empty')
+  ).nonempty('Topic description must have at least one item'),
 });
 
 const createSessionSchema = z.object({

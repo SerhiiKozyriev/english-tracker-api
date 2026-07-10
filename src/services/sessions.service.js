@@ -5,10 +5,10 @@ const getAll = async (search) => {
     return prisma.session.findMany({
         where: search ? {
             OR: [
-                {notes: {contains: search, mode: 'insensitive'}},
-                {topics: {some: {desc: {contains: search, mode: 'insensitive'}}}},
-                {topics: {some: {category: {display_name: {contains: search, mode: 'insensitive'}}}}},
-                {topics: {some: {category: {slug: {contains: search, mode: 'insensitive'}}}}}
+                { notes: { contains: search, mode: 'insensitive' } },
+                { topics: { some: { desc: { hasSome: [search] } } } },
+                { topics: { some: { category: { display_name: { contains: search, mode: 'insensitive' } } } } },
+                { topics: { some: { category: { slug: { contains: search, mode: 'insensitive' } } } } }
             ]
         } : undefined,
         include: {
@@ -138,7 +138,7 @@ const getStats = async () => {
 
         for (const topic of session.topics) {
             const partsCount = topic.desc
-                ? topic.desc.split(',').map(p => p.trim()).filter(Boolean).length
+                ? topic.desc.length
                 : 0;
 
             topicsCount += partsCount;
